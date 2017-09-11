@@ -1,0 +1,9 @@
+name: magnetite
+version: 0.1.0
+
+authors:
+  - Daniel Neumann <danieln8600@gmail.com>
+
+crystal: 0.23.1
+
+license: MIT
