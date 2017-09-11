@@ -37,6 +37,11 @@ module Magnetite
 
     def handler(socket : TCPSocket)
       @sockets << socket
+
+      loop do
+        msg = socket.gets
+        socket << "pong\n" if msg == "ping" # for testing
+      end
     end
 
   end

@@ -5,7 +5,6 @@ describe Magnetite do
   describe Magnetite::Server do
     host = "127.0.0.1"
     port = 12345
-
     server = Magnetite::Server.new(host, port)
 
     describe "#initialize" do
@@ -13,6 +12,14 @@ describe Magnetite do
         server.host.should eq(host)
         server.port.should eq(port)
       end
+
+      it "starts the tcp server" do
+        client = TCPSocket.new(host, port)
+        client << "ping\n"
+        client.gets.should eq("pong")
+        client.close
+      end
+
     end
 
     describe "#start" do
