@@ -6,4 +6,7 @@ describe Magnetite::Protocol do
   describe ".encode" do
   end
 
+  describe ".decode" do
+  end
+
 end

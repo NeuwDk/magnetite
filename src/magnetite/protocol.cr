@@ -9,6 +9,9 @@ module Magnetite
     def encode(obj)
     end
 
+    def decode(obj : String)
+    end
+
   end
 
 end
