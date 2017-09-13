@@ -1,6 +1,13 @@
 describe Magnetite::Protocol do
 
   describe ".parse" do
+    it "parses a string correctly" do
+      encoded_str = Magnetite::Protocol.encode("Hej fister medister : Takker og bukker")
+      str = Magnetite::Protocol.encode "[\"#{encoded_str}\" : String]"
+
+      Magnetite::Protocol.parse(str).should eq([encoded_str])
+    end
+
   end
 
   describe ".stringify" do
@@ -30,6 +37,10 @@ describe Magnetite::Protocol do
     it "encodes '\\n' to &5;" do
       Magnetite::Protocol.encode("\n").should eq("&5;")
     end
+
+    it "encodes ':' to &6;" do
+      Magnetite::Protocol.encode(":").should eq("&6;")
+    end
   end
 
   describe ".decode" do
@@ -57,11 +68,15 @@ describe Magnetite::Protocol do
       Magnetite::Protocol.decode("&5;").should eq("\n")
     end
 
+    it "decodes &6; to ':'" do
+      Magnetite::Protocol.decode("&6;").should eq(":")
+    end
+
   end
 
   describe "integration between .encode and .decode" do
     it "should return the original string when gone through both" do
-      str = "[35 : Int8, \"Hej &\" : String];"
+      str = "[35 : Int8, \"Hej: &\" : String];"
 
       encoded = Magnetite::Protocol.encode(str)
 
