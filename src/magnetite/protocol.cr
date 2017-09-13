@@ -67,14 +67,12 @@ module Magnetite
       obj.each_char_with_index do |c, i|
         new_c = c
         if skip_next > 0
-          skip_next = skip_next -1
+          skip_next = skip_next - 1
           next
         end
         if size >= i+3
-          tmp = c + obj[i+1, 2]
-          #puts "TMP in decode: #{tmp}"
           {% for char,index in SPECIAL_SIGNS %}
-            if tmp == "&{{index}};"
+            if c == '&' && obj[i+1] == '{{index}}' && obj[i+2] == ';'
               new_c = {{char}}
               skip_next = 2
             end
