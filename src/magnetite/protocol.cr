@@ -1,10 +1,18 @@
 module Magnetite
 
+  # Protocol that does the work between the sockets
+  #
+  # it really is what makes it possible to send objects from one place to the other
+  #
+  # might need some optimizations in term of the type definition on the strings sent
+  # over the wire. Instead of ":Array" ":a" might be sufficient. But for now it's
+  # not to be used in prod and therefor readability was a priority
   module Protocol
     extend self
 
     SPECIAL_SIGNS = [':', ',', '&'] # [',', '[', ']', '&', ';', '\n', ':']
 
+    # parses a String and turns it into an array
     def parse(msg : String)
       tuple = [] of Type
 
@@ -36,6 +44,9 @@ module Magnetite
       tuple
     end
 
+    # turns your array into a string to be sent over the socket
+    #
+    # 
     def stringify(array : Array(Type))
       String.build do |str|
         str << "["
