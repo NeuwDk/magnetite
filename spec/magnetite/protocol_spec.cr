@@ -59,4 +59,14 @@ describe Magnetite::Protocol do
 
   end
 
+  describe "integration between .encode and .decode" do
+    it "should return the original string when gone through both" do
+      str = "[35 : Int8, \"Hej &\" : String];"
+
+      encoded = Magnetite::Protocol.encode(str)
+
+      Magnetite::Protocol.decode(encoded).should eq(str)
+    end
+  end
+
 end
