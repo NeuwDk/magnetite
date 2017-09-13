@@ -3,12 +3,10 @@ module Magnetite
   module Protocol
     extend self
 
-    SPECIAL_SIGNS = [',', '[', ']', '&', ';', '\n', ':']
+    SPECIAL_SIGNS = [':', ',', '&'] # [',', '[', ']', '&', ';', '\n', ':']
 
     def parse(msg : String)
       tuple = [] of Type
-
-      msg = decode(msg)
 
       if msg[0] == '[' && msg[-1] == ']'
         msg[1, (msg.size-2)].split(",").each do |str|
@@ -30,7 +28,7 @@ module Magnetite
           when "String"
             tuple << decode(value[1, value.size-2])
           when "Array"
-            tuple << parse(value)
+            tuple << parse(decode(value))
           end
         end
       end
@@ -38,11 +36,37 @@ module Magnetite
       tuple
     end
 
-    def stringify(obj : Array(Type))
+    def stringify(array : Array(Type))
       String.build do |str|
-        str << '['
+        str << "["
 
-        #as
+        array.each_with_index do |obj, i|
+          if i > 0
+            str << ','
+          end
+
+          case obj
+          when Nil
+            str << "nil:Nil"
+          when Bool
+            str << "true" if obj
+            str << "false" unless obj
+            str << ":Bool"
+          when Int
+            obj.to_s(str)
+            str << ":Int"
+          when Float
+            obj.to_s(str)
+            str << ":Float"
+          when String
+            str << "\""
+            str << encode(obj)
+            str << "\":String"
+          when Array
+            str << encode(stringify(obj))
+            str << ":Array"
+          end
+        end
 
         str << ']'
       end
@@ -70,20 +94,20 @@ module Magnetite
 
       String.build do |str|
         obj.each_char_with_index do |c, i|
-          new_c = c
           if skip_next > 0
             skip_next = skip_next -1
             next
           end
-          if size >= i+3
+          if size >= i+3 && c == '&' && obj[i+2] == ';'
             {% for char,index in SPECIAL_SIGNS %}
-              if c == '&' && obj[i+1] == '{{index}}' && obj[i+2] == ';'
-                new_c = {{char}}
+              if obj[i+1] == '{{index}}'
+                str << {{char}}
                 skip_next = 2
+                next
               end
             {% end %}
           end
-          str << new_c
+          str << c
         end
       end
     end

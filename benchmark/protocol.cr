@@ -1,4 +1,4 @@
-SPECIAL_SIGNS = [',', '[', ']', '&', ';', '\n', ':']
+SPECIAL_SIGNS = [':', ',', '&', '\n'] # [',', '[', ']', '&', ';', '\n', ':'] # if this is shortened it will speed up!
 
 def new_encode(obj : String)
   String.build do |str|
@@ -30,20 +30,20 @@ def new_decode(obj : String)
 
   String.build do |str|
     obj.each_char_with_index do |c, i|
-      new_c = c
       if skip_next > 0
         skip_next = skip_next -1
         next
       end
-      if size >= i+3
+      if size >= i+3 && c == '&' && obj[i+2] == ';'
         {% for char,index in SPECIAL_SIGNS %}
-          if c == '&' && obj[i+1] == '{{index}}' && obj[i+2] == ';'
-            new_c = {{char}}
+          if obj[i+1] == '{{index}}'
+            str << {{char}}
             skip_next = 2
+            next
           end
         {% end %}
       end
-      str << new_c
+      str << c
     end
   end
 end
@@ -58,7 +58,7 @@ def old_decode(obj : String)
   out
 end
 
-str = "[[1,2,3,4] : Array]"
+str = "[[1:Int,2:Int,3:Int,4:Int] : Array]"
 encoded_str = new_encode str
 
 require "benchmark"
