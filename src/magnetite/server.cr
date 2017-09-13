@@ -32,7 +32,7 @@ module Magnetite
       end
     end
 
-    def handler(socket : TCPSocket)
+    private def handler(socket : TCPSocket)
       @sockets << socket
 
       # autentication could go here

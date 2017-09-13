@@ -1,4 +1,4 @@
-# magnetite
+# Magnetite
 
 a tuplespace for crystal to do distributed programming
 

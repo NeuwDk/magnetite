@@ -13,7 +13,7 @@ module Magnetite
 
     # encodes a string to send over the socket
     #
-    # *DON'T write "\*\n " in your string*
+    # __DON'T write "\*\n " in your string__
     # it will fuck everything up!
     def encode(obj : String)
       out = obj.clone
