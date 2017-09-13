@@ -1,11 +1,54 @@
+def encode(str : String)
+  Magnetite::Protocol.encode(str)
+end
+def decode(str : String)
+  Magnetite::Protocol.decode(str)
+end
+def parse(str : String)
+  Magnetite::Protocol.parse(str)
+end
+
+
 describe Magnetite::Protocol do
 
   describe ".parse" do
+    it "parses nil correctly" do
+      str = encode "[nil : Nil]"
+
+      parse(str).should eq([nil])
+    end
+
+    it "parses booleans correctly" do
+      str = encode "[true : Bool, false : Bool]"
+
+      parse(str).should eq([true, false])
+    end
+
+    it "parses an integer correctly" do
+      str = Magnetite::Protocol.encode "[55 : Int]"
+
+      Magnetite::Protocol.parse(str).should eq([55_i64])
+    end
+
+    it "parses a float number correctly" do
+      str = encode "[14.55 : Float]"
+
+      parse(str).should eq([14.55_f64])
+    end
+
     it "parses a string correctly" do
-      encoded_str = Magnetite::Protocol.encode("Hej fister medister : Takker og bukker")
+      to_encode = "Hej fister medister : Takker og bukker"
+      encoded_str = Magnetite::Protocol.encode(to_encode)
       str = Magnetite::Protocol.encode "[\"#{encoded_str}\" : String]"
 
-      Magnetite::Protocol.parse(str).should eq([encoded_str])
+      Magnetite::Protocol.parse(str).should eq([to_encode])
+    end
+
+    it "parses an array correctly" do
+      ary = encode "[1 : Int,2 : Int,3 : Int]"
+      str = encode "[#{ary} : Array]"
+
+      parse(str).should eq([[1,2,3]])
     end
 
   end

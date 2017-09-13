@@ -6,27 +6,36 @@ module Magnetite
     SPECIAL_SIGNS = [',', '[', ']', '&', ';', '\n', ':']
 
     def parse(msg : String)
-      tuple = [] of Int8
-
-      puts "#" * 90
-      puts msg
+      tuple = [] of Type
 
       msg = decode(msg)
 
-      puts "Decode:"
-      puts msg
-      puts "msg[0]: '#{msg[0]}', msg[-1]: '#{msg[-1]}'"
-
       if msg[0] == '[' && msg[-1] == ']'
         msg[1, (msg.size-2)].split(",").each do |str|
-          #do something with str
-          value, type = str.split(" : ")
-          puts "value: #{value}"
-          puts "type:  #{type}"
+          value, type = str.split(":")
+
+          value = value.lstrip.rstrip
+          type = type.lstrip.rstrip
+
+          case type
+          when "Nil"
+            tuple << nil
+          when "Bool"
+            tuple << true if value === "true"
+            tuple << false if value === "false"
+          when "Int"
+            tuple << value.to_i64
+          when "Float"
+            tuple << value.to_f64
+          when "String"
+            tuple << decode(value[1, value.size-2])
+          when "Array"
+            tuple << parse(value)
+          end
         end
       end
 
-      puts "#" * 90
+      tuple
     end
 
     def stringify(obj)
