@@ -38,50 +38,54 @@ module Magnetite
       tuple
     end
 
-    def stringify(obj)
+    def stringify(obj : Array(Type))
+      String.build do |str|
+        str << '['
+
+        #as
+
+        str << ']'
+      end
     end
 
     # encodes a string to send over the socket
     def encode(obj : String)
-      out = ""
-
-      obj.each_char do |c|
-        new_c = c
-        {% for char,index in SPECIAL_SIGNS %}
-          if c == {{char}}
-            new_c = "&{{index}};"
-          end
-        {% end %}
-        out = out + new_c
+      String.build do |str|
+        obj.each_char do |c|
+          new_c = c
+          {% for char,index in SPECIAL_SIGNS %}
+            if c == {{char}}
+              new_c = "&{{index}};"
+            end
+          {% end %}
+          str << new_c
+        end
       end
-
-      out
     end
 
     # decodes a string received from socket
     def decode(obj : String)
       size = obj.size
-      out = ""
       skip_next = 0
 
-      obj.each_char_with_index do |c, i|
-        new_c = c
-        if skip_next > 0
-          skip_next = skip_next - 1
-          next
+      String.build do |str|
+        obj.each_char_with_index do |c, i|
+          new_c = c
+          if skip_next > 0
+            skip_next = skip_next -1
+            next
+          end
+          if size >= i+3
+            {% for char,index in SPECIAL_SIGNS %}
+              if c == '&' && obj[i+1] == '{{index}}' && obj[i+2] == ';'
+                new_c = {{char}}
+                skip_next = 2
+              end
+            {% end %}
+          end
+          str << new_c
         end
-        if size >= i+3
-          {% for char,index in SPECIAL_SIGNS %}
-            if c == '&' && obj[i+1] == '{{index}}' && obj[i+2] == ';'
-              new_c = {{char}}
-              skip_next = 2
-            end
-          {% end %}
-        end
-        out = out + new_c
       end
-
-      out
     end
 
   end

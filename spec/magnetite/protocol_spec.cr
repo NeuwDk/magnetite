@@ -7,6 +7,9 @@ end
 def parse(str : String)
   Magnetite::Protocol.parse(str)
 end
+def stringify(obj : Array(Magnetite::Type))
+  Magnetite::Protocol.stringify(obj)
+end
 
 
 describe Magnetite::Protocol do
@@ -54,6 +57,10 @@ describe Magnetite::Protocol do
   end
 
   describe ".stringify" do
+    it "takes an array of two strings and stringifies them" do
+      stringify(["hej", "du"]).should eq("[\"hej\":String, \"du\":String]")
+    end
+
   end
 
   describe ".encode" do
