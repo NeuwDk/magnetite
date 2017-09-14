@@ -140,6 +140,28 @@ describe Magnetite::Server do
       client.close
     end
 
+    it "returns correct value when holding multiple values" do
+      client = TCPSocket.new(host, port)
+
+      #check that space is empty
+      client.puts Magnetite::Protocol::ACTIONS[:read_all]
+      client.gets.should eq("[]")
+
+      ten_ones = [] of Magnetite::Type
+      10.times do
+        client.puts Magnetite::Protocol::ACTIONS[:write]
+        client.puts "[1:Int]"
+        ten_ones << [1] of Magnetite::Type
+        client.gets
+      end
+      client.puts Magnetite::Protocol::ACTIONS[:read_all]
+
+      client.gets.should eq(Magnetite::Protocol.stringify(ten_ones))
+
+      # last test = no cleanup? 😂
+      client.close
+    end
+
   end
 
 end
