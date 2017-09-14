@@ -54,18 +54,88 @@ describe Magnetite::Server do
   end
 
   describe "#take" do
-    it "receives and parses an array properly" do
+    it "takes one 'tuple' from the space and removes it from the space" do
       array = [1,2,3]
       stringified_a = Magnetite::Protocol.stringify(array)
       client = TCPSocket.new(host,port)
 
       client.puts Magnetite::Protocol::ACTIONS[:write]
       client.puts stringified_a
+      client.gets
 
       client.puts Magnetite::Protocol::ACTIONS[:take]
       client.puts stringified_a
 
       client.gets.should eq(stringified_a)
+
+      #check that it was removed from the list
+      client.puts Magnetite::Protocol::ACTIONS[:read_all]
+      client.gets.should eq("[]")
+
+      client.close
+    end
+
+  end
+
+  describe "#write" do
+    it "returns Protocol::ACTIONS[:accept] on success" do
+      client = TCPSocket.new(host,port)
+
+      client.puts Magnetite::Protocol::ACTIONS[:write]
+      client.puts "[1:Int]"
+
+      client.gets.should eq(Magnetite::Protocol::ACTIONS[:accept])
+
+      #clean up
+      client.puts Magnetite::Protocol::ACTIONS[:take]
+      client.puts "[1:Int]"
+      client.gets
+
+      client.close
+    end
+
+  end
+
+  describe "#read" do
+    it "gets one 'tuple' from the space and doesn't delete it" do
+      client = TCPSocket.new(host, port)
+      s_a = "[1:Int]" # stringified_array
+      ra_s = "[#{Magnetite::Protocol.encode(s_a)}]:Array" # read_all_string
+
+      client.puts Magnetite::Protocol::ACTIONS[:write]
+      client.puts s_a
+      client.gets
+
+      # check that read_all gives the written array
+      client.puts Magnetite::Protocol::ACTIONS[:read_all]
+      client.gets.should eq(ra_s)
+
+      # gets the array from space
+      client.puts Magnetite::Protocol::ACTIONS[:read]
+      client.puts s_a
+      client.gets.should eq(s_a)
+
+      # still in space?
+      client.puts Magnetite::Protocol::ACTIONS[:read_all]
+      client.gets.should eq(ra_s)
+
+      #clean up
+      client.puts Magnetite::Protocol::ACTIONS[:take]
+      client.puts s_a
+      client.gets
+
+      client.close
+    end
+
+  end
+
+  describe "#read_all" do
+    it "returns '[]' when the 'space' is empty" do
+      client = TCPSocket.new(host, port)
+
+      client.puts Magnetite::Protocol::ACTIONS[:read_all]
+
+      client.gets.should eq("[]")
 
       client.close
     end

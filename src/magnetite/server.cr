@@ -9,6 +9,7 @@ module Magnetite
     def initialize(@host : String, port : Int)
       @port = port.to_u64
       @tcp = TCPServer.new(@host, @port)
+      @space = Space.new
 
       start
     end
@@ -37,24 +38,20 @@ module Magnetite
       loop do
         msg = socket.gets
 
-        if msg
-          #puts "handler: #{msg}"
-
-          case msg
-          when Protocol::ACTIONS[:take]
-            take(socket)
-          when Protocol::ACTIONS[:write]
-            write(socket)
-          when  Protocol::ACTIONS[:read]
-            # do something
-          when Protocol::ACTIONS[:read_all]
-            # do something
-          when "ping"
-            socket.puts "pong"
-          end
-        else
+        case msg
+        when Nil
           # socket dead
           break
+        when Protocol::ACTIONS[:take]
+          take(socket)
+        when Protocol::ACTIONS[:write]
+          write(socket)
+        when  Protocol::ACTIONS[:read]
+          read(socket)
+        when Protocol::ACTIONS[:read_all]
+          read_all(socket)
+        when "ping"
+          socket.puts "pong"
         end
       end
     end
@@ -64,15 +61,12 @@ module Magnetite
     end
 
     def take(socket : TCPSocket)
-      loop do
-        msg = socket.gets
+      msg = socket.gets
 
-        #puts "take: #{msg}"
-        if msg
-          array = Protocol.parse(msg)
-          socket.puts(msg)
-          break
-        end
+      if msg
+        array = @space.take(Protocol.parse(msg))
+
+        socket.puts(Protocol.stringify(array))
       end
     end
 
@@ -80,8 +74,23 @@ module Magnetite
       msg = socket.gets
 
       if msg
-        #ok(socket)
+        array = Protocol.parse(msg)
+
+        if @space.write(array)
+          ok(socket)
+        end
       end
+    end
+
+    def read(socket : TCPSocket)
+      if msg = socket.gets
+        array = @space.read Protocol.parse(msg)
+        socket.puts(Protocol.stringify(array))
+      end
+    end
+
+    def read_all(socket : TCPSocket)
+      socket.puts Protocol.stringify(@space.read_all)
     end
 
   end
