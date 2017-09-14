@@ -9,7 +9,6 @@ module Magnetite
     def initialize(@host : String, port : Int)
       @port = port.to_u64
       @tcp = TCPServer.new(@host, @port)
-      @sockets = [] of TCPSocket
 
       start
     end
@@ -33,25 +32,55 @@ module Magnetite
     end
 
     private def handler(socket : TCPSocket)
-      @sockets << socket
-
       # autentication could go here
 
       loop do
         msg = socket.gets
 
-        case msg
-        when "take"
-          # do something
-        when "write"
-          # do something
-        when "read"
-          # do something
-        when "read_all"
-          # do something
-        when "ping"
-          socket.puts "pong"
+        if msg
+          #puts "handler: #{msg}"
+
+          case msg
+          when Protocol::ACTIONS[:take]
+            take(socket)
+          when Protocol::ACTIONS[:write]
+            write(socket)
+          when  Protocol::ACTIONS[:read]
+            # do something
+          when Protocol::ACTIONS[:read_all]
+            # do something
+          when "ping"
+            socket.puts "pong"
+          end
+        else
+          # socket dead
+          break
         end
+      end
+    end
+
+    private def ok(socket : TCPSocket)
+      socket.puts Protocol::ACTIONS[:accept]
+    end
+
+    def take(socket : TCPSocket)
+      loop do
+        msg = socket.gets
+
+        #puts "take: #{msg}"
+        if msg
+          array = Protocol.parse(msg)
+          socket.puts(msg)
+          break
+        end
+      end
+    end
+
+    def write(socket : TCPSocket)
+      msg = socket.gets
+
+      if msg
+        #ok(socket)
       end
     end
 
