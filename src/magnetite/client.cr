@@ -11,19 +11,45 @@ module Magnetite
     end
 
     # write to tuple space
-    def write(tuple)
+    def write(array : Array(Type))
+      @server.puts Protocol::ACTIONS[:write]
+      @server.puts Protocol.stringify(array)
     end
 
     # take a tuple and if there isn't one block until there is
-    def take(tuple)
+    def take(array : Array(Type))
+      @server.puts Protocol::ACTIONS[:take]
+      @server.puts Protocol.stringify(array)
+
+      msg = @server.gets
+
+      if msg.is_a? String
+        obj = Protocol.parse(msg)
+      end
     end
 
     # read a tuple and if there isn't one block until there is
-    def read(tuple)
+    def read(array : Array(Type))
+      @server.puts Protocol::ACTIONS[:read]
+      @server.puts Protocol.stringify(array)
+
+      msg = @server.gets
+
+      if msg.is_a? String
+        obj = Protocol.parse(msg)
+      end
     end
 
     # read all tuples that matches and don't block
-    def read_all(tuple)
+    def read_all(array : Array(Type))
+      @server.puts Protocol::ACTIONS[:read_all]
+      @server.puts Protocol.stringify(array)
+
+      msg = @server.gets
+
+      if msg.is_a? String
+        obj = Protocol.parse(msg)
+      end
     end
   end
 

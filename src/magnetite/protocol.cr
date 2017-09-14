@@ -11,6 +11,8 @@ module Magnetite
     extend self
 
     SPECIAL_SIGNS = [':', ',', '&'] # [',', '[', ']', '&', ';', '\n', ':']
+    ACTIONS = {:take => "t", :write => "w", :read => "r", :read_all => "ra"}
+    TYPES = {:nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a"}
 
     # parses a String and turns it into an array
     def parse(msg : String)
