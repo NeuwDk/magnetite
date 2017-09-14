@@ -1,12 +1,10 @@
 module Magnetite
 
   class Space
-    record Action, act : Symbol, arr : Array(Type)
 
     def initialize
       @space = [] of Type
       @mutex = Mutex.new
-
     end
 
     def write(array : Array(Type))
