@@ -46,7 +46,7 @@ module Magnetite
 
     # turns your array into a string to be sent over the socket
     #
-    # 
+    #
     def stringify(array : Array(Type))
       String.build do |str|
         str << "["

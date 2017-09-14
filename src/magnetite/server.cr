@@ -39,7 +39,19 @@ module Magnetite
 
       loop do
         msg = socket.gets
-        socket << "pong\n" if msg == "ping" # for testing
+
+        case msg
+        when "take"
+          # do something
+        when "write"
+          # do something
+        when "read"
+          # do something
+        when "read_all"
+          # do something
+        when "ping"
+          socket.puts "pong"
+        end
       end
     end
 
