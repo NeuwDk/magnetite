@@ -12,7 +12,7 @@ module Magnetite
 
     SPECIAL_SIGNS = [':', ',', '&']
     ACTIONS = {:take => "t", :write => "w", :read => "r", :read_all => "ra", :accept => "a"}
-    TYPES = {:nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a"}
+    TYPES = {:nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a", :type => "t"}
 
     # parses a String and turns it into an array
     def parse(msg : String)
@@ -39,6 +39,13 @@ module Magnetite
             tuple << decode(value[1, value.size-2])
           when {{TYPES[:array]}}
             tuple << parse(decode(value))
+          when {{TYPES[:type]}}
+            tuple << :nil if value === {{TYPES[:nil]}}
+            tuple << :bool if value === {{TYPES[:bool]}}
+            tuple << :int if value === {{TYPES[:int]}}
+            tuple << :float if value === {{TYPES[:float]}}
+            tuple << :string if value === {{TYPES[:string]}}
+            tuple << :array if value === {{TYPES[:array]}}
           end
         end
       end
@@ -84,6 +91,10 @@ module Magnetite
             str << encode(stringify(obj))
             str << ":"
             str << {{TYPES[:array]}}
+          when Symbol
+            str << TYPES[obj]
+            str << ":"
+            str << {{TYPES[:type]}}
           end
         end
 

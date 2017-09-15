@@ -57,6 +57,26 @@ describe Magnetite::Protocol do
       parse(str).should eq([[1,2,3,"wubba lubba dup dup"]])
     end
 
+    it "parses types correctly" do
+      str = "[#{TYPES[:nil]}:#{TYPES[:type]}]"
+      parse(str).should eq([:nil])
+
+      str = "[#{TYPES[:bool]}:#{TYPES[:type]}]"
+      parse(str).should eq([:bool])
+
+      str = "[#{TYPES[:int]}:#{TYPES[:type]}]"
+      parse(str).should eq([:int])
+
+      str = "[#{TYPES[:float]}:#{TYPES[:type]}]"
+      parse(str).should eq([:float])
+
+      str = "[#{TYPES[:string]}:#{TYPES[:type]}]"
+      parse(str).should eq([:string])
+
+      str = "[#{TYPES[:array]}:#{TYPES[:type]}]"
+      parse(str).should eq([:array])
+    end
+
   end
 
   describe ".stringify" do
@@ -87,6 +107,26 @@ describe Magnetite::Protocol do
     it "works with different and mixed values" do
       stringified = "[1:#{TYPES[:int]},#{encode("[\"lorteparforhold\":#{TYPES[:string]},\"#{encode(" med på kanotur : ")}\":#{TYPES[:string]}]")}:#{TYPES[:array]},:#{TYPES[:nil]},false:#{TYPES[:bool]}]"
       stringify([1,["lorteparforhold"," med på kanotur : "], nil, false]).should eq(stringified)
+    end
+
+    it "stringifies types correctly" do
+      str = "[#{TYPES[:nil]}:#{TYPES[:type]}]"
+      stringify([:nil]).should eq(str)
+
+      str = "[#{TYPES[:bool]}:#{TYPES[:type]}]"
+      stringify([:bool]).should eq(str)
+
+      str = "[#{TYPES[:int]}:#{TYPES[:type]}]"
+      stringify([:int]).should eq(str)
+
+      str = "[#{TYPES[:float]}:#{TYPES[:type]}]"
+      stringify([:float]).should eq(str)
+
+      str = "[#{TYPES[:string]}:#{TYPES[:type]}]"
+      stringify([:string]).should eq(str)
+
+      str = "[#{TYPES[:array]}:#{TYPES[:type]}]"
+      stringify([:array]).should eq(str)
     end
 
   end
