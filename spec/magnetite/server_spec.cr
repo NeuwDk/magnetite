@@ -82,13 +82,13 @@ describe Magnetite::Server do
       client = TCPSocket.new(host,port)
 
       client.puts Magnetite::Protocol::ACTIONS[:write]
-      client.puts "[1:Int]"
+      client.puts Magnetite::Protocol.stringify([1] of Magnetite::Type)
 
       client.gets.should eq(Magnetite::Protocol::ACTIONS[:accept])
 
       #clean up
       client.puts Magnetite::Protocol::ACTIONS[:take]
-      client.puts "[1:Int]"
+      client.puts Magnetite::Protocol.stringify([1] of Magnetite::Type)
       client.gets
 
       client.close
@@ -99,8 +99,8 @@ describe Magnetite::Server do
   describe "#read" do
     it "gets one 'tuple' from the space and doesn't delete it" do
       client = TCPSocket.new(host, port)
-      s_a = "[1:Int]" # stringified_array
-      ra_s = "[#{Magnetite::Protocol.encode(s_a)}:Array]" # read_all_string
+      s_a = Magnetite::Protocol.stringify([1] of Magnetite::Type) # stringified_array
+      ra_s = "[#{Magnetite::Protocol.encode(s_a)}:#{Magnetite::Protocol::TYPES[:array]}]" # read_all_string
 
       client.puts Magnetite::Protocol::ACTIONS[:write]
       client.puts s_a
@@ -150,7 +150,7 @@ describe Magnetite::Server do
       ten_ones = [] of Magnetite::Type
       10.times do
         client.puts Magnetite::Protocol::ACTIONS[:write]
-        client.puts "[1:Int]"
+        client.puts Magnetite::Protocol.stringify([1] of Magnetite::Type)
         ten_ones << [1] of Magnetite::Type
         client.gets
       end
