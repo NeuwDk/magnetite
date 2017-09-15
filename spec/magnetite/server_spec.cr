@@ -100,7 +100,7 @@ describe Magnetite::Server do
     it "gets one 'tuple' from the space and doesn't delete it" do
       client = TCPSocket.new(host, port)
       s_a = "[1:Int]" # stringified_array
-      ra_s = "[#{Magnetite::Protocol.encode(s_a)}]:Array" # read_all_string
+      ra_s = "[#{Magnetite::Protocol.encode(s_a)}:Array]" # read_all_string
 
       client.puts Magnetite::Protocol::ACTIONS[:write]
       client.puts s_a
