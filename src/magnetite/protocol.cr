@@ -10,7 +10,7 @@ module Magnetite
   module Protocol
     extend self
 
-    SPECIAL_SIGNS = [':', ',', '&'] # [',', '[', ']', '&', ';', '\n', ':']
+    SPECIAL_SIGNS = [':', ',', '&']
     ACTIONS = {:take => "t", :write => "w", :read => "r", :read_all => "ra", :accept => "a"}
     TYPES = {:nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a"}
 
@@ -26,18 +26,18 @@ module Magnetite
           type = type.lstrip.rstrip
 
           case type
-          when "Nil"
+          when {{TYPES[:nil]}}
             tuple << nil
-          when "Bool"
+          when {{TYPES[:bool]}}
             tuple << true if value === "true"
             tuple << false if value === "false"
-          when "Int"
+          when {{TYPES[:int]}}
             tuple << value.to_i64
-          when "Float"
+          when {{TYPES[:float]}}
             tuple << value.to_f64
-          when "String"
+          when {{TYPES[:string]}}
             tuple << decode(value[1, value.size-2])
-          when "Array"
+          when {{TYPES[:array]}}
             tuple << parse(decode(value))
           end
         end
@@ -60,24 +60,30 @@ module Magnetite
 
           case obj
           when Nil
-            str << "nil:Nil"
+            str << ":"
+            str << {{TYPES[:nil]}}
           when Bool
             str << "true" if obj
             str << "false" unless obj
-            str << ":Bool"
+            str << ":"
+            str << {{TYPES[:bool]}}
           when Int
             obj.to_s(str)
-            str << ":Int"
+            str << ":"
+            str << {{TYPES[:int]}}
           when Float
             obj.to_s(str)
-            str << ":Float"
+            str << ":"
+            str << {{TYPES[:float]}}
           when String
             str << "\""
             str << encode(obj)
-            str << "\":String"
+            str << "\":"
+            str << {{TYPES[:string]}}
           when Array
             str << encode(stringify(obj))
-            str << ":Array"
+            str << ":"
+            str << {{TYPES[:array]}}
           end
         end
 

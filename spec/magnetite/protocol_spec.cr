@@ -13,30 +13,31 @@ def stringify(obj : Array(Magnetite::Type))
   Magnetite::Protocol.stringify(obj)
 end
 
+TYPES = Magnetite::Protocol::TYPES
 
 describe Magnetite::Protocol do
 
   describe ".parse" do
     it "parses nil correctly" do
-      str = "[nil : Nil]"
+      str = "[nil : #{TYPES[:nil]}]"
 
       parse(str).should eq([nil])
     end
 
     it "parses booleans correctly" do
-      str = "[true : Bool, false : Bool]"
+      str = "[true : #{TYPES[:bool]}, false : #{TYPES[:bool]}]"
 
       parse(str).should eq([true, false])
     end
 
     it "parses an integer correctly" do
-      str = "[55 : Int]"
+      str = "[55 : #{TYPES[:int]}]"
 
       Magnetite::Protocol.parse(str).should eq([55_i64])
     end
 
     it "parses a float number correctly" do
-      str = "[14.55 : Float]"
+      str = "[14.55 : #{TYPES[:float]}]"
 
       parse(str).should eq([14.55_f64])
     end
@@ -44,14 +45,14 @@ describe Magnetite::Protocol do
     it "parses a string correctly" do
       to_encode = "Hej fister medister : Takker og bukker"
       encoded_str = Magnetite::Protocol.encode(to_encode)
-      str = "[\"#{encoded_str}\" : String]"
+      str = "[\"#{encoded_str}\" : #{TYPES[:string]}]"
 
       Magnetite::Protocol.parse(str).should eq([to_encode])
     end
 
     it "parses an array correctly" do
-      ary = encode "[1 : Int,2 : Int,3 : Int,\"wubba lubba dup dup\":String]"
-      str = "[#{ary}:Array]"
+      ary = encode "[1 : #{TYPES[:int]},2 : #{TYPES[:int]},3 : #{TYPES[:int]},\"wubba lubba dup dup\":#{TYPES[:string]}]"
+      str = "[#{ary}:#{TYPES[:array]}]"
 
       parse(str).should eq([[1,2,3,"wubba lubba dup dup"]])
     end
@@ -60,31 +61,31 @@ describe Magnetite::Protocol do
 
   describe ".stringify" do
     it "stringifies Nil correctly" do
-      stringify([nil]).should eq("[nil:Nil]")
+      stringify([nil]).should eq("[:#{TYPES[:nil]}]")
     end
 
     it "stringifies Bools correctly" do
-      stringify([true, false]).should eq("[true:Bool,false:Bool]")
+      stringify([true, false]).should eq("[true:#{TYPES[:bool]},false:#{TYPES[:bool]}]")
     end
 
     it "stringifies Ints correctly" do
-      stringify([1, 2_u8, 55_i64]).should eq("[1:Int,2:Int,55:Int]")
+      stringify([1, 2_u8, 55_i64]).should eq("[1:#{TYPES[:int]},2:#{TYPES[:int]},55:#{TYPES[:int]}]")
     end
 
     it "stringifies Floats correctly" do
-      stringify([1.55, 2.478, 3.14_f64]).should eq("[1.55:Float,2.478:Float,3.14:Float]")
+      stringify([1.55, 2.478, 3.14_f64]).should eq("[1.55:#{TYPES[:float]},2.478:#{TYPES[:float]},3.14:#{TYPES[:float]}]")
     end
 
     it "takes an array of two strings and stringifies them" do
-      stringify(["hej", "du"]).should eq("[\"hej\":String,\"du\":String]")
+      stringify(["hej", "du"]).should eq("[\"hej\":#{TYPES[:string]},\"du\":#{TYPES[:string]}]")
     end
 
     it "stringifies Arrays correctly" do
-      stringify([[1,2,3]]).should eq("[#{encode("[1:Int,2:Int,3:Int]")}:Array]")
+      stringify([[1,2,3]]).should eq("[#{encode("[1:#{TYPES[:int]},2:#{TYPES[:int]},3:#{TYPES[:int]}]")}:#{TYPES[:array]}]")
     end
 
     it "works with different and mixed values" do
-      stringified = "[1:Int,#{encode("[\"lorteparforhold\":String,\"#{encode(" med på kanotur : ")}\":String]")}:Array,nil:Nil,false:Bool]"
+      stringified = "[1:#{TYPES[:int]},#{encode("[\"lorteparforhold\":#{TYPES[:string]},\"#{encode(" med på kanotur : ")}\":#{TYPES[:string]}]")}:#{TYPES[:array]},:#{TYPES[:nil]},false:#{TYPES[:bool]}]"
       stringify([1,["lorteparforhold"," med på kanotur : "], nil, false]).should eq(stringified)
     end
 
