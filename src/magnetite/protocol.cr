@@ -29,8 +29,8 @@ module Magnetite
           when {{TYPES[:nil]}}
             tuple << nil
           when {{TYPES[:bool]}}
-            tuple << true if value === "true"
-            tuple << false if value === "false"
+            tuple << true if value === "t"
+            tuple << false if value === "f"
           when {{TYPES[:int]}}
             tuple << value.to_i64
           when {{TYPES[:float]}}
@@ -40,12 +40,20 @@ module Magnetite
           when {{TYPES[:array]}}
             tuple << parse(decode(value))
           when {{TYPES[:type]}}
-            tuple << :nil if value === {{TYPES[:nil]}}
-            tuple << :bool if value === {{TYPES[:bool]}}
-            tuple << :int if value === {{TYPES[:int]}}
-            tuple << :float if value === {{TYPES[:float]}}
-            tuple << :string if value === {{TYPES[:string]}}
-            tuple << :array if value === {{TYPES[:array]}}
+            case value
+            when {{TYPES[:nil]}}
+              tuple << :nil
+            when {{TYPES[:bool]}}
+              tuple << :bool
+            when {{TYPES[:int]}}
+              tuple << :int
+            when {{TYPES[:float]}}
+              tuple << :float
+            when {{TYPES[:string]}}
+              tuple << :string
+            when {{TYPES[:array]}}
+              tuple << :array
+            end
           end
         end
       end
@@ -70,8 +78,8 @@ module Magnetite
             str << ":"
             str << {{TYPES[:nil]}}
           when Bool
-            str << "true" if obj
-            str << "false" unless obj
+            str << "t" if obj
+            str << "f" unless obj
             str << ":"
             str << {{TYPES[:bool]}}
           when Int

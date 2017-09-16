@@ -25,7 +25,7 @@ describe Magnetite::Protocol do
     end
 
     it "parses booleans correctly" do
-      str = "[true : #{TYPES[:bool]}, false : #{TYPES[:bool]}]"
+      str = "[t : #{TYPES[:bool]}, f : #{TYPES[:bool]}]"
 
       parse(str).should eq([true, false])
     end
@@ -85,7 +85,7 @@ describe Magnetite::Protocol do
     end
 
     it "stringifies Bools correctly" do
-      stringify([true, false]).should eq("[true:#{TYPES[:bool]},false:#{TYPES[:bool]}]")
+      stringify([true, false]).should eq("[t:#{TYPES[:bool]},f:#{TYPES[:bool]}]")
     end
 
     it "stringifies Ints correctly" do
@@ -105,7 +105,7 @@ describe Magnetite::Protocol do
     end
 
     it "works with different and mixed values" do
-      stringified = "[1:#{TYPES[:int]},#{encode("[\"lorteparforhold\":#{TYPES[:string]},\"#{encode(" med på kanotur : ")}\":#{TYPES[:string]}]")}:#{TYPES[:array]},:#{TYPES[:nil]},false:#{TYPES[:bool]}]"
+      stringified = "[1:#{TYPES[:int]},#{encode("[\"lorteparforhold\":#{TYPES[:string]},\"#{encode(" med på kanotur : ")}\":#{TYPES[:string]}]")}:#{TYPES[:array]},:#{TYPES[:nil]},f:#{TYPES[:bool]}]"
       stringify([1,["lorteparforhold"," med på kanotur : "], nil, false]).should eq(stringified)
     end
 
