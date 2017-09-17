@@ -112,21 +112,27 @@ describe Magnetite::Protocol do
     it "stringifies types correctly" do
       str = "[#{TYPES[:nil]}:#{TYPES[:type]}]"
       stringify([:nil]).should eq(str)
+      stringify([Nil]).should eq(str)
 
       str = "[#{TYPES[:bool]}:#{TYPES[:type]}]"
       stringify([:bool]).should eq(str)
+      stringify([Bool]).should eq(str)
 
       str = "[#{TYPES[:int]}:#{TYPES[:type]}]"
       stringify([:int]).should eq(str)
+      stringify([Int]).should eq(str)
 
       str = "[#{TYPES[:float]}:#{TYPES[:type]}]"
       stringify([:float]).should eq(str)
+      stringify([Float]).should eq(str)
 
       str = "[#{TYPES[:string]}:#{TYPES[:type]}]"
       stringify([:string]).should eq(str)
+      stringify([String]).should eq(str)
 
       str = "[#{TYPES[:array]}:#{TYPES[:type]}]"
       stringify([:array]).should eq(str)
+      stringify([Array]).should eq(str)
     end
 
   end

@@ -3,16 +3,16 @@ module Magnetite
   # Protocol that does the work between the sockets
   #
   # it really is what makes it possible to send objects from one place to the other
-  #
-  # might need some optimizations in term of the type definition on the strings sent
-  # over the wire. Instead of ":Array" ":a" might be sufficient. But for now it's
-  # not to be used in prod and therefor readability was a priority
   module Protocol
     extend self
 
     SPECIAL_SIGNS = [':', ',', '&']
     ACTIONS = {:take => "t", :write => "w", :read => "r", :read_all => "ra", :accept => "a"}
-    TYPES = {:nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a", :type => "t"}
+    TYPES = {
+      :nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a",
+      :type => "t",
+      Nil => "n", Bool => "b", Int => "i", Float => "f", String => "s", Array => "a"
+    }
 
     # parses a String and turns it into an array
     def parse(msg : String)
@@ -99,7 +99,7 @@ module Magnetite
             str << encode(stringify(obj))
             str << ":"
             str << {{TYPES[:array]}}
-          when Symbol
+          when Symbol, Types
             str << TYPES[obj]
             str << ":"
             str << {{TYPES[:type]}}
