@@ -1,3 +1,5 @@
+require "./space/*"
+
 module Magnetite
 
   # Space where everything is saved.
