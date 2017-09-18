@@ -15,7 +15,7 @@ module Magnetite
           until inserted
             if key == p.key
               p.another_instance
-              if key = x.shift
+              if key = x.shift?
                 key = key.hash
                 if p.children.nil?
                   p.children = Tree.new
