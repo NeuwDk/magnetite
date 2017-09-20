@@ -44,6 +44,7 @@ module Magnetite
     end
 
     # read all tuples that matches and don't block
+    # (in the sense, that the server will reply immediately)
     def read_all
       @server.puts Protocol::ACTIONS[:read_all]
 
