@@ -2,6 +2,7 @@ module Magnetite
 
   # Client for the tuple space
   class Client
+    @port : UInt64
 
     # host and port of server
     def initialize(@host : String, port : Int)
@@ -14,6 +15,8 @@ module Magnetite
     def write(array : Array(Type))
       @server.puts Protocol::ACTIONS[:write]
       @server.puts Protocol.stringify(array)
+
+      @server.gets === Protocol::ACTIONS[:accept]
     end
 
     # take a tuple and if there isn't one block until there is
@@ -41,9 +44,8 @@ module Magnetite
     end
 
     # read all tuples that matches and don't block
-    def read_all(array : Array(Type))
+    def read_all
       @server.puts Protocol::ACTIONS[:read_all]
-      @server.puts Protocol.stringify(array)
 
       msg = @server.gets
 
