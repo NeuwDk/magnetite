@@ -5,22 +5,23 @@ module Magnetite
       getter size : Int32 = 0, root : Node? = nil
 
       def insert(x : Array(Type))
-        puts "#"*90
-        puts x
+        #puts "#"*90
+        #puts x
 
         if @root.nil?
-          puts "root nil"
+          #puts "root nil"
           @root = Node.new(x)
         else
-          key = x.shift.hash
+          val = x.shift
+          key = val.hash
           p = @root # p for parent (to insert under)
 
           loop do
-            puts "key: #{key}, p: #{p.inspect}"
+            #puts "key: #{key}, p: #{p.inspect}"
             if p.nil?
               break
             elsif key == p.key
-              puts "straight on"
+              #puts "straight on"
               p.another_instance(x.size)
               if k = x.shift?
                 key = k.hash
@@ -35,22 +36,22 @@ module Magnetite
                   next
                 end
               else
-                puts "here?? #{caller}"
+                #puts "here?? #{caller}"
                 break
               end
             elsif key > p.key
-              puts "right"
+              #puts "right"
               if p.right.nil?
-                p.right = Node.new(x)
+                p.right = Node.new(x.insert(0,val))
                 break
               else
                 p = p.right
                 next
               end
             else
-              puts "left"
+              #puts "left"
               if p.left.nil?
-                p.left = Node.new(x)
+                p.left = Node.new(x.insert(0,val))
                 break
               else
                 p = p.left
@@ -66,9 +67,21 @@ module Magnetite
       end
 
       def to_a
-        out = [] of Array(Type)
+        node = @root
+        if node
+          node.to_a
+        else
+          [] of Array(Type)
+        end
+      end
 
-        out
+      def find(x : Array(Type))
+        node = @root
+        if node
+          node.find(x)
+        else
+          nil
+        end
       end
 
     end

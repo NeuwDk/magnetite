@@ -43,6 +43,43 @@ module Magnetite
         @depth << size
       end
 
+      def to_a : Array(Array(Type))
+        out = [] of Array(Type)
+        nodel = left # node left
+        noder = right # node right
+
+        if nodel
+          nodel.to_a.each do |v|
+            out << v
+          end
+        end
+
+        child = @children
+        if child
+          parr = child.to_a.each do |arr|
+            out << arr.insert(0, @value)
+          end
+        else
+          out << [@value] of Type
+        end
+
+        if noder
+          noder.to_a.each do |v|
+            out << v
+          end
+        end
+
+        out
+      end
+
+      def find(type : Array(type))
+        if x[0].is_a? Symbol
+          # find by type
+        else
+          # find by value
+        end
+      end
+
     end
 
   end

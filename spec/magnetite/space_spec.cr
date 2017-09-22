@@ -5,15 +5,18 @@ describe Magnetite::Space do
   space = Magnetite::Space.new
   empty = [] of Magnetite::Type
   tmp = [1,2,3] of Magnetite::Type
+  tmp2 = [2,1,3] of Magnetite::Type
 
   describe "#write" do
     it "writes an array to the space" do
       space.write(tmp)
+      space.write(tmp2)
 
-      space.read_all.should eq([tmp])
+      space.read_all.should eq([tmp, tmp2])
 
       #cleanup
       space.take(tmp)
+      space.take(tmp2)
       space.read_all.should eq(empty)
     end
 
