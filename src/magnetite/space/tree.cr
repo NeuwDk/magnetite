@@ -78,9 +78,7 @@ module Magnetite
       def find(x : Array(Type))
         node = @root
         if node
-          node.find(x)
-        else
-          nil
+          node.find(x.shift?)
         end
       end
 

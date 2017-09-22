@@ -72,9 +72,25 @@ module Magnetite
         out
       end
 
-      def find(type : Array(type))
-        if x[0].is_a? Symbol
+      def find(val : Type)
+        if val.is_a? Symbol
           # find by type
+          if @type === val
+            return [@value]
+          end
+          nodel = left
+          noder = right
+          if nodel
+            if ret = nodel.find(val) # ret : return value
+              return ret
+            end
+          end
+          if noder
+            if ret = noder.find(val)
+              return ret
+            end
+          end
+
         else
           # find by value
         end

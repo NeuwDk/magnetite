@@ -19,11 +19,11 @@ module Magnetite
     def take(array : Array(Type))
       #@space.shift?
 
-      array
+      @space.find(array) || [] of Type
     end
 
     def read(array : Array(Type))
-      array
+      @space.find(array) || [] of Type
     end
 
     def read_all
