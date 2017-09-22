@@ -76,7 +76,7 @@ module Magnetite
         if val.is_a? Symbol
           # find by type
           if @type === val
-            return [@value]
+            return self
           end
           nodel = left
           noder = right

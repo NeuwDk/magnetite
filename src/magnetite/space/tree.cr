@@ -77,9 +77,16 @@ module Magnetite
 
       def find(x : Array(Type))
         node = @root
-        if node
-          node.find(x.shift?)
+        out = [] of Type
+
+        x.each do |val|
+          node = node.find(val) if node
+          if node
+            out << node.value
+          end
         end
+
+        out
       end
 
     end
