@@ -9,7 +9,7 @@ module Magnetite
   class Space
 
     def initialize
-      @space = [] of Array(Type)
+      @space = Tree.new
     end
 
     def write(array : Array(Type))
@@ -17,7 +17,7 @@ module Magnetite
     end
 
     def take(array : Array(Type))
-      @space.shift?
+      #@space.shift?
 
       array
     end
@@ -27,7 +27,7 @@ module Magnetite
     end
 
     def read_all
-      @space
+      @space.to_a
     end
 
   end

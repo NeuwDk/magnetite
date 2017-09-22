@@ -3,24 +3,23 @@ module Magnetite
 
     class Node
       property left : Node?, right : Node?, children : Tree?
-      getter key : Int32, value : Type, depth : Int32, type : Symbol
+      getter key : UInt64, value : Type, depth : Array(Int32), type : Symbol
 
       def initialize(array : Array(Type))
+        array = array.dup
         val = array.shift
 
-        @key = val.hash
+        @key = val.hash.to_u64
         @value = val
-        @depth = array.size
-        @instances = 1
+        @depth = [array.size]
 
         if array.size > 0
-          children = Tree.new
-          children.insert << array
+          child = Tree.new
+          child.insert(array)
+          @children = child
         end
 
-        type = val.class
-
-        case type
+        case val
         when Nil
           @type = :nil
         when Bool
@@ -33,13 +32,15 @@ module Magnetite
           @type = :string
         when Array
           @type = :array
+        when Symbol
+          @type = :type
         else
-          raise "Type not supported"
+          @type = :unknown
         end
       end
 
-      def another_instance
-        @instances = @instances + 1
+      def another_instance(size)
+        @depth << size
       end
 
     end
