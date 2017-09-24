@@ -78,11 +78,13 @@ module Magnetite
       def find(x : Array(Type))
         node = @root
         out = [] of Type
+        size = x.size - 1
 
         x.each do |val|
-          node = node.find(val) if node
+          node = node.find(val,size) if node
           if node
             out << node.value
+            size = size - 1
           end
         end
 

@@ -49,9 +49,7 @@ module Magnetite
         noder = right # node right
 
         if nodel
-          nodel.to_a.each do |v|
-            out << v
-          end
+          out.concat(nodel.to_a)
         end
 
         child = @children
@@ -64,35 +62,36 @@ module Magnetite
         end
 
         if noder
-          noder.to_a.each do |v|
-            out << v
-          end
+          out.concat(noder.to_a)
         end
 
         out
       end
 
-      def find(val : Type)
+      def find(val : Type, size : Int32)
+        search_for = @value
         if val.is_a? Symbol
-          # find by type
-          if @type === val
-            return self
+          search_for = @type
+          if val === :nil
+            search_for = :nil
           end
-          nodel = left
-          noder = right
-          if nodel
-            if ret = nodel.find(val) # ret : return value
-              return ret
-            end
-          end
-          if noder
-            if ret = noder.find(val)
-              return ret
-            end
-          end
+        end
 
-        else
-          # find by value
+        if search_for == val && depth.find {|i| i === size}
+          return self
+        end
+
+        nodel = left
+        noder = right
+        if nodel
+          if ret = nodel.find(val, size) # ret : return value
+            return ret
+          end
+        end
+        if noder
+          if ret = noder.find(val, size)
+            return ret
+          end
         end
       end
 
