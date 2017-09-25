@@ -83,12 +83,68 @@ module Magnetite
         x.each do |val|
           node = node.find(val,size) if node
           if node
+            node = node[1]
             out << node.value
             size = size - 1
           end
         end
 
         out
+      end
+
+      def take(x : Array(Type))
+        root = @root
+        if root.nil?
+          return nil
+        else
+
+          node = {[] of Bool, root}
+          out = [] of Type
+          to_delete = [] of Proc(Nil)
+          size = x.size - 1
+
+          x.each_with_index do |val,val_index|
+            current_node = node[1] if node
+            node = current_node.find(val, size) if current_node
+            if node
+              out << node[1].value
+              # delete it
+              depth = node[1].depth
+              path = node[0]
+              depth.each_with_index do |v,i|
+                if size === v
+                  depth.delete_at(i)
+
+                  if current_node && depth.size === 0
+                    to_delete << ->do
+                      n = current_node
+                      s = path.size - 1
+                      path.each_with_index do |bool, index|
+                        if n
+                          if index === s
+                            n.left = nil if !bool
+                            n.right = nil if bool
+                          else
+                            n = bool ? n.right : n.left
+                          end
+                        end
+                      end
+                      n.kill_me if n && s === -1
+                    end
+                  end
+                  break
+                end
+              end
+              size = size - 1
+
+            end
+          end
+          to_delete.reverse.each do |p|
+            p.call
+          end
+
+          out
+        end
       end
 
     end

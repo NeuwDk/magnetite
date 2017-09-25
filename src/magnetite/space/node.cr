@@ -78,21 +78,26 @@ module Magnetite
         end
 
         if search_for == val && depth.find {|i| i === size}
-          return self
+          path = [] of Bool
+          return {path, self} # false = left, true = right
         end
 
         nodel = left
         noder = right
         if nodel
           if ret = nodel.find(val, size) # ret : return value
-            return ret
+            return {ret[0].push(false), ret[1]}
           end
         end
         if noder
           if ret = noder.find(val, size)
-            return ret
+            return {ret[0].push(true), ret[1]}
           end
         end
+      end
+
+      def kill_me
+        puts "Killing: #{self.inspect}"
       end
 
     end
