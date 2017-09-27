@@ -90,6 +90,20 @@ describe Magnetite::Space do
       space.take(tmp)
     end
 
+    it "reads the entire depth of the array" do
+      tt = [1,2,4] of Magnetite::Type
+
+      space.write(tmp)
+      space.read(tmp).should eq(tmp)
+
+      space.write(tt)
+      space.read(tt).should eq(tt)
+
+      #cleanup
+      space.take(tmp)
+      space.take(tt)
+    end
+
   end
 
   describe "#read_all" do
