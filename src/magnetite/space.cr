@@ -13,7 +13,7 @@ module Magnetite
     end
 
     def write(array : Array(Type))
-      @space << array
+      @space << array.dup
     end
 
     def take(array : Array(Type))

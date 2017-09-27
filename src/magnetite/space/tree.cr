@@ -81,8 +81,11 @@ module Magnetite
         size = x.size - 1
 
         x.each do |val|
-          node = node.find(val,size) if node
-          if node
+          child = node.children if node
+          child = child.root if child
+          node = child.find(val,size) if child
+          node = nil unless child
+          if node.is_a? Tuple(Array(Bool), Node)
             node = node[1]
             out << node.value
             size = size - 1

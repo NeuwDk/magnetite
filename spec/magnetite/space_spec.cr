@@ -1,11 +1,18 @@
 require "../../src/magnetite.cr"
 require "spec"
 
+def empty
+  [] of Magnetite::Type
+end
+def tmp
+  [1,2,3] of Magnetite::Type
+end
+def tmp2
+  [2,1,3] of Magnetite::Type
+end
+
 describe Magnetite::Space do
   space = Magnetite::Space.new
-  empty = [] of Magnetite::Type
-  tmp = [1,2,3] of Magnetite::Type
-  tmp2 = [2,1,3] of Magnetite::Type
 
   describe "#write" do
     it "writes an array to the space" do
