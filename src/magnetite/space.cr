@@ -16,18 +16,29 @@ module Magnetite
       @space << array.dup
     end
 
-    def take(array : Array(Type))
-      #@space.shift?
+    {% for name in ["take", "read"] %}
+      def {{ name.id }}(array : Array(Type))
+        ch = Channel(Array(Type)).new
 
-      @space.take(array) || [] of Type
-    end
+        spawn do
+          loop do
+            res = @space.{{ name.id }}(array)
 
-    def read(array : Array(Type))
-      @space.read(array) || [] of Type
-    end
+            if res
+              ch.send res
+              break
+            end
+
+            Fiber.yield
+          end
+        end
+
+        ch.receive
+      end
+    {% end %}
 
     def read_all
-      @space.to_a
+      @space.to_a || [] of Type
     end
 
   end

@@ -59,26 +59,27 @@ describe Magnetite::Space do
     end
 
     it "works with all supported types" do
-      space.write([false] of Magnetite::Type)
-      space.take([:bool]).should eq([false])
+      space.write([1, false] of Magnetite::Type)
+      space.take([1, :bool]).should eq([1, false])
 
-      space.write([13] of Magnetite::Type)
-      space.take([:int]).should eq([13])
+      space.write([1, 13] of Magnetite::Type)
+      space.take([1, :int]).should eq([1, 13])
 
-      space.write([3.14] of Magnetite::Type)
-      space.take([:float]).should eq([3.14])
+      space.write([1, 3.14] of Magnetite::Type)
+      space.take([1, :float]).should eq([1, 3.14])
 
-      space.write(["s"] of Magnetite::Type)
-      space.take([:string]).should eq(["s"])
+      space.write([1, "s"] of Magnetite::Type)
+      space.take([1, :string]).should eq([1, "s"])
 
-      space.write([[1] of Magnetite::Type] of Magnetite::Type)
-      space.take([:array]).should eq([[1]])
+      space.write([1, [1] of Magnetite::Type] of Magnetite::Type)
+      space.take([1, :array]).should eq([1, [1]])
     end
 
-    it "works with nested wildcards in arrays" do
-      space.write([1,["s", 3.14] of Magnetite::Type] of Magnetite::Type)
-      space.take([:int, [:string, :float]]).should eq([1, ["s", 3.14]])
-    end
+#    decided not to support nested wildcards for now. Maybe later
+#    it "works with nested wildcards in arrays" do
+#      space.write([1,["s", 3.14] of Magnetite::Type] of Magnetite::Type)
+#      space.take([1, [:string, :float]]).should eq([1, ["s", 3.14]])
+#    end
 
   end
 
