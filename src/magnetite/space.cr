@@ -20,7 +20,7 @@ module Magnetite
       def {{ name.id }}(array : Array(Type))
         ch = Channel(Array(Type)).new
         sleep_time = 0.008
-        clock = @space.clock
+        clock = 0
 
         spawn do
           loop do
