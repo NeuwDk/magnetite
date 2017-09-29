@@ -77,6 +77,10 @@ describe Magnetite::Protocol do
       parse(str).should eq([:array])
     end
 
+    it "parses '[]' correctly" do
+      parse("[]").should eq([] of Int32)
+    end
+
   end
 
   describe ".stringify" do

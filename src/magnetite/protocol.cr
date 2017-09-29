@@ -18,6 +18,8 @@ module Magnetite
     def parse(msg : String)
       tuple = [] of Type
 
+      return tuple if msg === "[]"
+
       if msg[0] == '[' && msg[-1] == ']'
         msg[1, (msg.size-2)].split(",").each do |str|
           value, type = str.split(":")
