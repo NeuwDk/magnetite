@@ -14,6 +14,10 @@ module Magnetite
         @children << val
       end
 
+      def delete_at(i : Int)
+        @children.delete_at(i)
+      end
+
       def to_a
         out = [] of Type
 

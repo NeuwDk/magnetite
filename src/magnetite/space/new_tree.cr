@@ -38,7 +38,7 @@ module Magnetite
       # this is so that when inserting I don't loop over twice
       # so it requires a check if the id matches
       # `val.first.hash === find_node(val).id`
-      def find_node(val : Array(Type))
+      private def find_node(val : Array(Type))
         node = @root
         if node
           id = val.first.hash
@@ -63,28 +63,27 @@ module Magnetite
         end
       end
 
-      def find(val : Array(Type))
+      private def find(val : Array(Type))
         node = find_node(val)
         id = val.first.hash
+        #puts "searching for #{val}, hash: #{id}"
 
         if node && node.id === id
           children = node.children
           out = nil
           size = val.size
 
-          children.each do |v|
+          children.each_with_index do |v,index|
             next unless size === v.size
             match = true
-            index = 0
 
             size.times do |i|
-              index = i
+              #puts "val[#{i}] = #{val[i]} : #{val[i].class},\t\t v[#{i}] = #{v[i]} : #{v[i].class}"
 
               case val[i]
               when v[i]
                 next
               when Symbol
-                puts "wildcard!"
                 if val[i] === :nil
                   next
                 elsif val[i] === :bool && v[i].is_a? Bool
@@ -129,7 +128,7 @@ module Magnetite
         out = find(val)
 
         if out
-          out[1].children.delete_at (out[0])
+          out[1].delete_at((out[0]))
         end
       end
 
