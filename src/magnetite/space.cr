@@ -9,7 +9,7 @@ module Magnetite
   class Space
 
     def initialize
-      @space = Tree.new
+      @space = NewTree.new
     end
 
     def write(array : Array(Type))
@@ -23,7 +23,7 @@ module Magnetite
     end
 
     def read(array : Array(Type))
-      @space.find(array) || [] of Type
+      @space.read(array) || [] of Type
     end
 
     def read_all
