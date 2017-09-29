@@ -2,10 +2,13 @@ module Magnetite
   class Space
 
     class NewTree
+      getter clock = 0_u64
       @root : NewNode?
 
       def insert(val : Array(Type))
         return if val.empty?
+
+        @clock = @clock + 1
 
         if @root.nil?
           # create new node and set it as root
@@ -128,6 +131,8 @@ module Magnetite
         out = find(val)
 
         if out
+          @clock = @clock + 1
+
           out[1].delete_at((out[0]))
         end
       end

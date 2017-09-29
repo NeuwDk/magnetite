@@ -19,9 +19,15 @@ module Magnetite
     {% for name in ["take", "read"] %}
       def {{ name.id }}(array : Array(Type))
         ch = Channel(Array(Type)).new
+        sleep_time = 0.008
+        clock = @space.clock
 
         spawn do
           loop do
+            if clock === @space.clock
+              sleep(sleep_time)
+              next
+            end
             res = @space.{{ name.id }}(array)
 
             if res
@@ -29,7 +35,8 @@ module Magnetite
               break
             end
 
-            Fiber.yield
+            clock = @space.clock
+            sleep(sleep_time)
           end
         end
 
