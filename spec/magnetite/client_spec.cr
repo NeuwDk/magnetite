@@ -46,10 +46,10 @@ describe Magnetite::Client do
     it "reads everything it space" do
       client.read_all.should eq(empty)
 
-      arr = [] of Int32
+      arr = [] of Array(Int32)
       10.times do |i|
         client.write [i]
-        arr << i
+        arr << [i]
       end
 
       client.read_all.should eq(arr)
