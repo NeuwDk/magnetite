@@ -75,11 +75,10 @@ describe Magnetite::Space do
       space.take([1, :array]).should eq([1, [1]])
     end
 
-#    decided not to support nested wildcards for now. Maybe later
-#    it "works with nested wildcards in arrays" do
-#      space.write([1,["s", 3.14] of Magnetite::Type] of Magnetite::Type)
-#      space.take([1, [:string, :float]]).should eq([1, ["s", 3.14]])
-#    end
+    it "works with nested wildcards in arrays" do
+      space.write([1,["s", 3.14] of Magnetite::Type] of Magnetite::Type)
+      space.take([1, [:string, :float] of Magnetite::Type] of Magnetite::Type).should eq([1, ["s", 3.14]])
+    end
 
   end
 

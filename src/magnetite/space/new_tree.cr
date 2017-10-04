@@ -78,38 +78,8 @@ module Magnetite
 
           children.each_with_index do |v,index|
             next unless size === v.size
-            match = true
 
-            size.times do |i|
-              #puts "val[#{i}] = #{val[i]} : #{val[i].class},\t\t v[#{i}] = #{v[i]} : #{v[i].class}"
-
-              case val[i]
-              when v[i]
-                next
-              when Symbol
-                if val[i] === :nil
-                  next
-                elsif val[i] === :bool && v[i].is_a? Bool
-                  next
-                elsif val[i] === :int && v[i].is_a? Int
-                  next
-                elsif val[i] === :float && v[i].is_a? Float
-                  next
-                elsif val[i] === :string && v[i].is_a? String
-                  next
-                elsif val[i] === :array && v[i].is_a? Array
-                  next
-                else
-                  match = false
-                  break
-                end
-              else
-                match = false
-                break
-              end
-            end
-
-            if match
+            if find_match(size, val, v)
               out = {index, node}
               break
             end
@@ -117,6 +87,58 @@ module Magnetite
 
           out
         end
+      end
+
+      private def find_match(size, val : Array(Type), v : Array(Type))
+        match = true
+
+        size.times do |i|
+          #puts "val[#{i}] = #{val[i]} : #{val[i].class},\t\t v[#{i}] = #{v[i]} : #{v[i].class}"
+
+          case val[i]
+          when v[i]
+            next
+          when Symbol
+            if val[i] === :nil
+              next
+            elsif val[i] === :bool && v[i].is_a? Bool
+              next
+            elsif val[i] === :int && v[i].is_a? Int
+              next
+            elsif val[i] === :float && v[i].is_a? Float
+              next
+            elsif val[i] === :string && v[i].is_a? String
+              next
+            elsif val[i] === :array && v[i].is_a? Array
+              next
+            else
+              match = false
+              break
+            end
+          when Array(Type)
+            nested_val = val[i]
+            nested_v = v[i]
+
+            if nested_val.is_a? Array(Type) && nested_v.is_a? Array(Type) && nested_val.size === nested_v.size
+              nested_size = nested_val.size
+              nested_match = find_match(nested_size, nested_val, nested_v)
+            else
+              nested_match = false
+            end
+
+            if nested_match
+              next
+            else
+              match = false
+              break
+            end
+          else
+            match = false
+            break
+          end
+        end
+
+        match
       end
 
       def read(val : Array(Type))
