@@ -34,6 +34,12 @@ module Magnetite
             end
 
             insert_repair(new_node)
+
+            root = new_node
+            while parent(root)
+              root = parent(root)
+            end
+            @root = root
           end
         end
       end
