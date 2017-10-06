@@ -12,7 +12,9 @@ module Magnetite
 
         if @root.nil?
           # create new node and set it as root
-          @root = NewNode.new(val)
+          new_node = NewNode.new(val)
+          insert_repair(new_node)
+          @root = new_node
         else
           # check if need to update existing node or create new
           node = find_node(val)
@@ -23,12 +25,15 @@ module Magnetite
           elsif node
             # insert node at correct place
             new_node = NewNode.new(val)
+            new_node.parent = node
 
             if node.id > id
               node.left = new_node
             else
               node.right = new_node
             end
+
+            insert_repair(new_node)
           end
         end
       end
@@ -163,6 +168,110 @@ module Magnetite
         r = @root
 
         r.to_a if r
+      end
+
+      # self-balancing Red-black tree functionality
+      private def parent(node : NewNode)
+        node.parent
+      end
+      private def grandparent(node : NewNode)
+        p = node.parent
+        p.parent if p
+      end
+      private def sibling(node : NewNode)
+        p = node.parent
+
+        if p
+          if node === p.left
+            p.right
+          else
+            p.left
+          end
+        end
+      end
+      private def uncle(node : NewNode)
+        p = parent(node)
+        g = grandparent(node)
+
+        if g && p
+          sibling(p)
+        end
+      end
+      private def rotate_left(node : NewNode)
+        new_node = node.right
+        if new_node
+          node.right = new_node.left
+          new_node.left = node
+          new_node.parent = node.parent
+          node.parent = new_node
+          p = new_node.parent
+          if p
+            if p.right === node
+              p.right = new_node
+            else
+              p.left = new_node
+            end
+          end
+        end
+      end
+      private def rotate_right(node : NewNode)
+        new_node = node.left
+        if new_node
+          node.left = new_node.right
+          new_node.right = node
+          new_node.parent = node.parent
+          node.parent = new_node
+          p = new_node.parent
+          if p
+            if p.right === node
+              p.right = new_node
+            else
+              p.left = new_node
+            end
+          end
+        end
+      end
+      private def insert_repair(node : NewNode)
+        p = parent(node)
+        u = uncle(node)
+        g = grandparent(node)
+        if p.nil?
+          node.colour = BLACK
+        elsif p.colour === BLACK
+          # do nothing, all is in order
+        elsif u && u.colour === RED
+          p.colour = BLACK
+          u.colour = BLACK
+          if g
+            g.colour = RED
+            insert_repair(g)
+          end
+        else
+          if g
+            gl = g.left
+            gr = g.right
+            target = nil
+            if gl && node === gl.right
+              rotate_left(p)
+              target = node.left
+            elsif gr && node === gr.left
+              rotate_right(p)
+              target = node.right
+            end
+
+            if target
+              tp = parent(target)
+              tg = grandparent(target)
+              if tp && target === tp.left
+                rotate_right(tg) if tg
+              else
+                rotate_left(tg) if tg
+              end
+              tp.colour = BLACK if tp
+              tg.colour = RED if tg
+            end
+          end
+        end
       end
 
     end

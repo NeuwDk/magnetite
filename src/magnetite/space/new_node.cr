@@ -1,9 +1,12 @@
 module Magnetite
   class Space
 
+    RED = true
+    BLACK = false
+
     class NewNode
       getter children : Array(Array(Type)), id : Int64
-      property right : NewNode?, left : NewNode?
+      property right : NewNode?, left : NewNode?, parent : NewNode?, colour = RED
 
       def initialize(val : Array(Type))
         @children = [val]
