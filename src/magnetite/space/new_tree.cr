@@ -35,9 +35,10 @@ module Magnetite
 
             insert_repair(new_node)
 
+            # find new root node
             root = new_node
-            while parent(root)
-              root = parent(root)
+            while r = parent(root)
+              root = r
             end
             @root = root
           end
