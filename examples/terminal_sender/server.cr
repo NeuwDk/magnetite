@@ -1,7 +1,7 @@
 require "../../src/magnetite.cr"
 
 server = Magnetite::Server.new("localhost", 12345)
-client = Magnetite::Client.new("localhost", 12345)
+client = server.space
 
 loop do
   msg = gets
