@@ -32,10 +32,6 @@ This method is the same a read, except that it removes the matching array from t
 This method reads all the arrays on the server. It responds immediately, even if the space is empty.
 
 
-```crystal
-require "magnetite"
-```
-
 ### The server process
 ```crystal
 require "magnetite"
@@ -54,7 +50,7 @@ rescue
 end
 ```
 
-In `examples` folder there are a few examples that show how to use this in a few scenarios
+In `examples` folder there are a few examples that show how to use this library in a few scenarios
 
 
 ## Development
