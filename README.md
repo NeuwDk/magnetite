@@ -59,6 +59,10 @@ In `examples` folder there are a few examples that show how to use this library 
 
 TODO: Write development instructions here
 
+### To-dos
+* SSL on the socket communications
+* Authentication on initialization of connection between client and server
+
 ## Contributing
 
 1. Fork it ( https://github.com/neuwdk/magnetite/fork )
