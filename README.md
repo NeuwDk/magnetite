@@ -37,6 +37,8 @@ This method reads all the arrays on the server. It responds immediately, even if
 require "magnetite"
 
 server = Magnetite::Server.new("localhost", 12345)
+
+sleep
 ```
 
 ### The client process
