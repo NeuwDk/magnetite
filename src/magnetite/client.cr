@@ -28,6 +28,8 @@ module Magnetite
 
       if msg.is_a? String
         obj = Protocol.parse(msg)
+      else
+        [] of Type
       end
     end
 
@@ -40,6 +42,8 @@ module Magnetite
 
       if msg.is_a? String
         obj = Protocol.parse(msg)
+      else
+        [] of Type
       end
     end
 

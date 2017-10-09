@@ -4,7 +4,7 @@ module Magnetite
   #
   #
   class Server
-    getter host : String, port : UInt64
+    getter host : String, port : UInt64, space : Space
 
     def initialize(@host : String, port : Int)
       @port = port.to_u64
