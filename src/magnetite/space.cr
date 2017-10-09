@@ -9,7 +9,7 @@ module Magnetite
   class Space
 
     def initialize
-      @space = NewTree.new
+      @space = HSpace.new
     end
 
     def write(array : Array(Type))
