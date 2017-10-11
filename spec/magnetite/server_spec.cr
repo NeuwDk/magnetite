@@ -51,6 +51,28 @@ describe Magnetite::Server do
     it "returns false as it sohuld already be started" do
       server.start.should eq(false)
     end
+
+    it "accepts with correct passphrase" do
+      Magnetite::CONFIG[:auth] = true
+
+      client = TCPSocket.new(host, port)
+      client.gets.should eq(Magnetite::Protocol::ACTIONS[:passphrase])
+      client.puts Magnetite::CONFIG[:auth_pass]
+      client.gets.should eq(Magnetite::Protocol::ACTIONS[:accept])
+
+      Magnetite::CONFIG[:auth] = false
+    end
+
+    it "rejects with correct passphrase" do
+      Magnetite::CONFIG[:auth] = true
+
+      client = TCPSocket.new(host, port)
+      client.gets.should eq(Magnetite::Protocol::ACTIONS[:passphrase])
+      client.puts "abc"
+      client.gets.should eq(Magnetite::Protocol::ACTIONS[:reject])
+
+      Magnetite::CONFIG[:auth] = false
+    end
   end
 
   describe "#take" do

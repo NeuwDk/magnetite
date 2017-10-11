@@ -34,6 +34,16 @@ module Magnetite
 
     private def handler(socket : TCPSocket)
       # autentication could go here
+      if CONFIG[:auth] === true
+        socket.puts Protocol::ACTIONS[:passphrase]
+
+        if socket.gets === CONFIG[:auth_pass]
+          socket.puts Protocol::ACTIONS[:accept]
+        else
+          socket.puts Protocol::ACTIONS[:reject]
+          return
+        end
+      end
 
       loop do
         msg = socket.gets

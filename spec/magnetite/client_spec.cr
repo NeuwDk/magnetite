@@ -3,6 +3,22 @@ describe Magnetite::Client do
   client = Magnetite::Client.new("localhost", 12347)
   empty = [] of Magnetite::Type
 
+  describe "#initialize" do
+    it "establishes a connection with the correct pass" do
+      Magnetite::CONFIG[:auth] = true
+      client1 = Magnetite::Client.new("localhost", 12347)
+      Magnetite::CONFIG[:auth] = false
+    end
+
+    it "is rejected and raises with incorrect pass" do
+      Magnetite::CONFIG[:auth] = true
+      expect_raises do
+        Magnetite::Client.new("localhost", 12347, "abc")
+      end
+      Magnetite::CONFIG[:auth] = false
+    end
+  end
+
   describe "#write" do
     it "returns true when server succesfully wrote" do
       client.write([1,2,3]).should be_true

@@ -7,7 +7,7 @@ module Magnetite
     extend self
 
     SPECIAL_SIGNS = [':', ',', '&']
-    ACTIONS = {:take => "t", :write => "w", :read => "r", :read_all => "ra", :accept => "a"}
+    ACTIONS = {:take => "t", :write => "w", :read => "r", :read_all => "ra", :accept => "a", :reject => "re", :passphrase => "p"}
     TYPES = {
       :nil => "n", :bool => "b", :int => "i", :float => "f", :string => "s", :array => "a",
       :type => "t",

@@ -2,13 +2,32 @@ module Magnetite
 
   # Client for the tuple space
   class Client
+
+    class IncorrectPass < Exception
+      def initialize(msg = "Incorrect passphrase for server")
+        super(msg)
+      end
+    end
+
+
     @port : UInt64
 
     # host and port of server
-    def initialize(@host : String, port : Int)
+    def initialize(@host : String, port : Int, pass : String = CONFIG[:auth_pass])
       @port = port.to_u64
 
       @server = TCPSocket.new(@host, @port)
+
+      # autentication could go here
+      if CONFIG[:auth] === true
+        if @server.gets === Protocol::ACTIONS[:passphrase]
+          @server.puts pass
+
+          if @server.gets === Protocol::ACTIONS[:reject]
+            raise IncorrectPass.new
+          end
+        end
+      end
     end
 
     # write to tuple space
