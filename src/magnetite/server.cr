@@ -41,6 +41,7 @@ module Magnetite
           socket.puts Protocol::ACTIONS[:accept]
         else
           socket.puts Protocol::ACTIONS[:reject]
+          socket.close
           return
         end
       end
