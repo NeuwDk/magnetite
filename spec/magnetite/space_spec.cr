@@ -46,6 +46,9 @@ describe Magnetite::Space do
 
       space.write(tmp)
       space.take([1,:nil,3] of Magnetite::Type).should eq(tmp)
+
+      space.write(tmp)
+      space.take([1,Nil,3] of Magnetite::Type).should eq(tmp)
     end
 
     it "can get an array using a type as a selector" do
@@ -56,6 +59,12 @@ describe Magnetite::Space do
 
       space.take([1,:string,3]).should eq([1,"2",3])
       space.take([1,:int,3]).should eq([1,2,3])
+
+      space.write(tmp)
+      space.write([1,"2",3] of Magnetite::Type)
+
+      space.take([1,String,3]).should eq([1,"2",3])
+      space.take([1,Int,3]).should eq(tmp)
     end
 
     it "works with all supported types" do

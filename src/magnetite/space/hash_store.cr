@@ -52,18 +52,18 @@ module Magnetite
           case val[i]
           when v[i]
             next
-          when Symbol
-            if val[i] === :nil
+          when Symbol, Types
+            if val[i] === :nil || val[i] == Nil
               next
-            elsif val[i] === :bool && v[i].is_a? Bool
+            elsif (val[i] === :bool || val[i] == Bool) && v[i].is_a? Bool
               next
-            elsif val[i] === :int && v[i].is_a? Int
+            elsif (val[i] === :int || val[i] == Int) && v[i].is_a? Int
               next
-            elsif val[i] === :float && v[i].is_a? Float
+            elsif (val[i] === :float || val[i] == Float) && v[i].is_a? Float
               next
-            elsif val[i] === :string && v[i].is_a? String
+            elsif (val[i] === :string || val[i] == String) && v[i].is_a? String
               next
-            elsif val[i] === :array && v[i].is_a? Array
+            elsif (val[i] === :array || val[i] == Array) && v[i].is_a? Array
               next
             else
               match = false
