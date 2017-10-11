@@ -1,7 +1,7 @@
 module Magnetite
   class Space
 
-    class HSpace
+    private class HSpace
       getter clock = 0_u64
       @store : Hash(Type, Array(Array(Type)))
 

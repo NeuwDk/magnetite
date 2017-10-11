@@ -1,21 +1,22 @@
 describe Magnetite::Client do
+  Magnetite::CONFIG[:auth] = true
   server = Magnetite::Server.new("localhost", 12347)
   client = Magnetite::Client.new("localhost", 12347)
   empty = [] of Magnetite::Type
 
   describe "#initialize" do
     it "establishes a connection with the correct pass" do
-      Magnetite::CONFIG[:auth] = true
-      client1 = Magnetite::Client.new("localhost", 12347)
-      Magnetite::CONFIG[:auth] = false
+      #Magnetite::CONFIG[:auth] = true
+      #client1 = Magnetite::Client.new("localhost", 12347)
+      #Magnetite::CONFIG[:auth] = false
+
+      # nothing to test, really. Setting up the client variable is sufficient
     end
 
     it "is rejected and raises with incorrect pass" do
-      Magnetite::CONFIG[:auth] = true
       expect_raises do
         Magnetite::Client.new("localhost", 12347, "abc")
       end
-      Magnetite::CONFIG[:auth] = false
     end
   end
 

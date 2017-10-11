@@ -8,6 +8,11 @@ module Magnetite
         super(msg)
       end
     end
+    class ConnectionClosed < Exception
+      def initialize(msg = "Connection closed")
+        super(msg)
+      end
+    end
 
 
     @port : UInt64
@@ -30,8 +35,13 @@ module Magnetite
       end
     end
 
+    private def raise_if_closed
+      raise ConnectionClosed.new if @server.closed?
+    end
+
     # write to tuple space
     def write(array : Array(Type))
+      raise_if_closed
       @server.puts Protocol::ACTIONS[:write]
       @server.puts Protocol.stringify(array)
 
@@ -40,6 +50,7 @@ module Magnetite
 
     # take a tuple and if there isn't one block until there is
     def take(array : Array(Type))
+      raise_if_closed
       @server.puts Protocol::ACTIONS[:take]
       @server.puts Protocol.stringify(array)
 
@@ -54,6 +65,7 @@ module Magnetite
 
     # read a tuple and if there isn't one block until there is
     def read(array : Array(Type))
+      raise_if_closed
       @server.puts Protocol::ACTIONS[:read]
       @server.puts Protocol.stringify(array)
 
@@ -69,6 +81,7 @@ module Magnetite
     # read all tuples that matches and don't block
     # (in the sense, that the server will reply immediately)
     def read_all
+      raise_if_closed
       @server.puts Protocol::ACTIONS[:read_all]
 
       msg = @server.gets
