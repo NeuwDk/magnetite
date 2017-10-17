@@ -21,7 +21,7 @@ This method is used to write to the "space".
 It takes an array of values and saves them on the server.
 
 #### read
-Thus method is used to read from the "space".
+This method is used to read from the "space".
 It takes an array of values and wildcards and finds a match on the server.
 It doesn't return before a match is found.
 
@@ -37,9 +37,14 @@ This method reads all the arrays on the server. It responds immediately, even if
 require "magnetite"
 
 server = Magnetite::Server.new("localhost", 12345)
+space = server.space
 
 sleep
 ```
+
+With the space variable you get the same access as with the client.
+This is nice if you need to setup some initial values, like a latest action identifier.
+If you don't sleep as the last thing, the process will just close and the server will therefor also close.
 
 ### The client process
 ```crystal
@@ -47,6 +52,8 @@ require "magnetite"
 
 begin
   client = Magnetite::Client.new("localhost", 12345)
+
+  # do what needs doing here
 rescue
   # no server or server down
 end
@@ -54,6 +61,9 @@ end
 
 In `examples` folder there are a few examples that show how to use this library in a few scenarios
 
+#### Note
+The first value in the array is the identifier. You can therefor not use wildcards to find those.
+They have to be the exact value that you're searching for.
 
 ## Development
 
