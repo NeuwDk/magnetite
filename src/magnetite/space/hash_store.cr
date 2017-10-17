@@ -7,17 +7,20 @@ module Magnetite
 
       def initialize
         @store = {} of Type => Array(Array(Type))
+        @mutex = Mutex.new
       end
 
       def insert(val : Array(Type))
         return if val.empty?
 
-        @clock = @clock + 1
+        @mutex.synchronize do
+          @clock = @clock + 1
 
-        if @store.has_key? val.first
-          @store[(val.first)] << val
-        else
-          @store[(val.first)] = [val] of Array(Type)
+          if @store.has_key? val.first
+            @store[(val.first)] << val
+          else
+            @store[(val.first)] = [val] of Array(Type)
+          end
         end
       end
       def <<(val : Array(Type))
@@ -107,15 +110,17 @@ module Magnetite
         result = find(val)
 
         if result
-          @clock = @clock + 1
+          @mutex.synchronize do
+            @clock = @clock + 1
 
-          out = result[1].delete_at(result[0])
+            out = result[1].delete_at(result[0])
 
-          if result[1].empty?
-            @store.delete(val.first)
+            if result[1].empty?
+              @store.delete(val.first)
+            end
+
+            out
           end
-
-          out
         end
       end
 
