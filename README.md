@@ -69,10 +69,6 @@ They have to be the exact value that you're searching for.
 
 TODO: Write development instructions here
 
-### To-dos
-* Optional SSL on the socket communications
-* Optional persistence to a file
-
 ## Contributing
 
 1. Fork it ( https://github.com/neuwdk/magnetite/fork )
