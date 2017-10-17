@@ -14,7 +14,7 @@ describe Magnetite::Client do
     end
 
     it "is rejected and raises with incorrect pass" do
-      expect_raises do
+      expect_raises Magnetite::Client::IncorrectPass do
         Magnetite::Client.new("localhost", 12347, "abc")
       end
     end
